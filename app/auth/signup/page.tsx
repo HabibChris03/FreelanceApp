@@ -118,42 +118,10 @@ export default function SignUpPage() {
     setError('')
     setLoading(true)
 
-    if (formData.password !== formData.confirmPassword) {
-      setError('Passwords do not match')
-      setLoading(false)
-      return
-    }
-
-    if (formData.password.length < 6) {
-      setError('Password must be at least 6 characters long')
-      setLoading(false)
-      return
-    }
-
-    try {
-      const response = await fetch('/api/auth/signup', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          name: formData.name,
-          email: formData.email,
-          password: formData.password,
-          role: role
-        })
-      })
-
-      if (!response.ok) {
-        const data = await response.json()
-        throw new Error(data.error || 'Signup failed')
-      }
-
-      router.push('/auth/signin?message=Account created successfully')
-    } catch (err: any) {
-      setError(err.message)
-    } finally {
-      setLoading(false)
-    }
+   
+     router.push('/dashboard')
   }
+    
 
   const getRoleDisplay = () => {
     switch (role) {
@@ -208,7 +176,7 @@ export default function SignUpPage() {
             {/* Role Selection */}
             <motion.div variants={itemVariants} className="mt-6 flex bg-gray-100 rounded-xl p-1">
               {[
-                { value: 'student', label: 'Student', icon: GraduationCap },
+                { value: 'student', label: 'Freelancer', icon: GraduationCap },
                 { value: 'customer', label: 'Customer', icon: Briefcase }
               ].map((option) => (
                 <button
@@ -258,7 +226,7 @@ export default function SignUpPage() {
                   </div>
                   <input
                     type="text"
-                    required
+                    
                     className="block w-full pl-10 pr-3 py-4 border border-gray-300 rounded-xl placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-all duration-200 bg-white/50 backdrop-blur-sm"
                     placeholder="Full name"
                     value={formData.name}
@@ -273,7 +241,7 @@ export default function SignUpPage() {
                   </div>
                   <input
                     type="email"
-                    required
+                 
                     className="block w-full pl-10 pr-3 py-4 border border-gray-300 rounded-xl placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-all duration-200 bg-white/50 backdrop-blur-sm"
                     placeholder="Email address"
                     value={formData.email}
@@ -288,7 +256,7 @@ export default function SignUpPage() {
                   </div>
                   <input
                     type={showPassword ? "text" : "password"}
-                    required
+                   
                     className="block w-full pl-10 pr-12 py-4 border border-gray-300 rounded-xl placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-all duration-200 bg-white/50 backdrop-blur-sm"
                     placeholder="Password (min. 6 characters)"
                     value={formData.password}
@@ -314,7 +282,7 @@ export default function SignUpPage() {
                   </div>
                   <input
                     type={showConfirmPassword ? "text" : "password"}
-                    required
+                    
                     className="block w-full pl-10 pr-12 py-4 border border-gray-300 rounded-xl placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-all duration-200 bg-white/50 backdrop-blur-sm"
                     placeholder="Confirm password"
                     value={formData.confirmPassword}

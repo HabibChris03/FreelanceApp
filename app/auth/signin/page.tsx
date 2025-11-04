@@ -215,7 +215,7 @@ export default function SignInPage() {
                     </div>
                     <input
                       type="email"
-                      required
+                   
                       className="block w-full pl-10 pr-3 py-4 border border-gray-300 rounded-xl placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-all duration-200 bg-white/50 backdrop-blur-sm"
                       placeholder="Enter your email"
                       value={formData.email}
@@ -230,7 +230,7 @@ export default function SignInPage() {
                     </div>
                     <input
                       type={showPassword ? "text" : "password"}
-                      required
+                    
                       className="block w-full pl-10 pr-12 py-4 border border-gray-300 rounded-xl placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-all duration-200 bg-white/50 backdrop-blur-sm"
                       placeholder="Enter your password"
                       value={formData.password}
