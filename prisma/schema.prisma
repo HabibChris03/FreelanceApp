@@ -1,8 +1,3 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
-// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
-// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
 
 generator client {
   provider = "prisma-client"
@@ -12,4 +7,69 @@ generator client {
 datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
+}
+
+model User {
+  id            String    @id @default(cuid())
+  email         String    @unique
+  password      String
+  role          String    @default("USER") // "USER" or "ADMIN"
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+  profile       Profile?
+  jobs          Job[]
+  applications  Application[]
+  reviewsGiven  Review[]  @relation("reviewsGiven")
+  reviewsReceived Review[]  @relation("reviewsReceived")
+}
+
+model Profile {
+  id          String    @id @default(cuid())
+  userId      String    @unique
+  user        User      @relation(fields: [userId], references: [id])
+  firstName   String
+  lastName    String
+  bio         String?
+  skills      String[]
+  portfolio   String[]
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+}
+
+model Job {
+  id            String    @id @default(cuid())
+  title         String
+  description   String
+  budget        Float
+  skills        String[]
+  status        String    @default("OPEN") // "OPEN", "IN_PROGRESS", "CLOSED"
+  clientId      String
+  client        User      @relation(fields: [clientId], references: [id])
+  applications  Application[]
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+}
+
+model Application {
+  id              String    @id @default(cuid())
+  jobId           String
+  job             Job       @relation(fields: [jobId], references: [id])
+  freelancerId    String
+  freelancer      User      @relation(fields: [freelancerId], references: [id])
+  proposal        String
+  status          String    @default("PENDING") // "PENDING", "ACCEPTED", "REJECTED"
+  createdAt       DateTime  @default(now())
+  updatedAt       DateTime  @updatedAt
+}
+
+model Review {
+  id              String    @id @default(cuid())
+  jobId           String
+  rating          Int
+  comment         String?
+  reviewerId      String
+  reviewer        User      @relation("reviewsGiven", fields: [reviewerId], references: [id])
+  revieweeId      String
+  reviewee        User      @relation("reviewsReceived", fields: [revieweeId], references: [id])
+  createdAt       DateTime  @default(now())
 }
