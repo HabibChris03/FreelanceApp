@@ -1,7 +1,8 @@
+
 'use client'
 
 import { createContext, useContext, useEffect, useState } from 'react'
-import { useRouter } from 'next/navigation'
+import { useRouter, usePathname } from 'next/navigation'
 import { signIn, signOut as nextAuthSignOut } from 'next-auth/react'
 
 interface User {
@@ -20,10 +21,13 @@ interface AuthContextType {
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined)
 
+const publicPages = ['/', '/auth/signin', '/auth/signup']
+
 export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [user, setUser] = useState<User | null>(null)
   const [loading, setLoading] = useState(true)
   const router = useRouter()
+  const pathname = usePathname()
 
   useEffect(() => {
     // Check if user is logged in
@@ -34,6 +38,8 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         
         if (session?.user) {
           setUser(session.user)
+        } else if (!publicPages.includes(pathname)) {
+          router.push('/auth/signin')
         }
       } catch (error) {
         console.error('Auth check failed:', error)
@@ -43,7 +49,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     }
 
     checkAuth()
-  }, [])
+  }, [pathname, router])
 
   const handleSignIn = async (email: string, password: string) => {
     const result = await signIn('credentials', {

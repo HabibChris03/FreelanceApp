@@ -10,17 +10,19 @@ datasource db {
 }
 
 model User {
-  id            String    @id @default(cuid())
-  email         String    @unique
-  password      String
-  role          String    @default("USER") // "USER" or "ADMIN"
-  createdAt     DateTime  @default(now())
-  updatedAt     DateTime  @updatedAt
-  profile       Profile?
-  jobs          Job[]
-  applications  Application[]
-  reviewsGiven  Review[]  @relation("reviewsGiven")
-  reviewsReceived Review[]  @relation("reviewsReceived")
+  id               String        @id @default(cuid())
+  email            String        @unique
+  password         String
+  role             String        @default("USER") // "USER" or "ADMIN"
+  createdAt        DateTime      @default(now())
+  updatedAt        DateTime      @updatedAt
+  profile          Profile?
+  jobs             Job[]
+  applications     Application[]
+  reviewsGiven     Review[]      @relation("reviewsGiven")
+  reviewsReceived  Review[]      @relation("reviewsReceived")
+  sentMessages     Message[]     @relation("sentMessages")
+  receivedMessages Message[]     @relation("receivedMessages")
 }
 
 model Profile {
@@ -72,4 +74,14 @@ model Review {
   revieweeId      String
   reviewee        User      @relation("reviewsReceived", fields: [revieweeId], references: [id])
   createdAt       DateTime  @default(now())
+}
+
+model Message {
+  id          String    @id @default(cuid())
+  content     String
+  createdAt   DateTime  @default(now())
+  senderId    String
+  sender      User      @relation("sentMessages", fields: [senderId], references: [id])
+  receiverId  String
+  receiver    User      @relation("receivedMessages", fields: [receiverId], references: [id])
 }
