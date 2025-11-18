@@ -106,7 +106,7 @@ export default function CustomerDashboard({ user }: CustomerDashboardProps) {
           <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
             <Link
               href="/services"
-              className="mt-4 sm:mt-0 inline-flex items-center px-6 py-3 border border-transparent text-base font-medium rounded-xl text-white bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700 shadow-lg hover:shadow-xl transition-all duration-200"
+              className="mt-4 sm:mt-0 inline-flex items-center px-6 py-3 border border-transparent text-base font-medium rounded-xl text-white bg-linear-to-r from-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700 shadow-lg hover:shadow-xl transition-all duration-200"
             >
               <Plus className="w-5 h-5 mr-2" />
               Find Services
@@ -335,7 +335,7 @@ export default function CustomerDashboard({ user }: CustomerDashboardProps) {
                   transition={{ delay: 0.5 + index * 0.1 }}
                   className="flex items-center space-x-3 p-3 rounded-lg border border-gray-100 hover:border-indigo-200 transition-colors"
                 >
-                  <div className="w-10 h-10 bg-gradient-to-r from-indigo-500 to-purple-600 rounded-full flex items-center justify-center">
+                  <div className="w-10 h-10 bg-linear-to-r from-indigo-500 to-purple-600 rounded-full flex items-center justify-center">
                     <span className="text-white text-sm font-medium">
                       {freelancer.name
                         .split(" ")
