@@ -7,6 +7,7 @@ import { useRouter } from 'next/navigation';
 export default function SignUpPage() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [role, setRole] = useState('CUSTOMER');
   const [error, setError] = useState('');
   const router = useRouter();
 
@@ -20,7 +21,7 @@ export default function SignUpPage() {
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ email, password }),
+        body: JSON.stringify({ email, password, role }),
       });
 
       if (res.ok) {
@@ -55,6 +56,17 @@ export default function SignUpPage() {
             value={password}
             onChange={(e) => setPassword(e.target.value)}
           />
+        </div>
+        <div className="mb-4">
+          <label className="block text-gray-700">Role</label>
+          <select
+            className="w-full border rounded-lg p-2"
+            value={role}
+            onChange={(e) => setRole(e.target.value)}
+          >
+            <option value="CUSTOMER">Customer</option>
+            <option value="FREELANCER">Freelancer</option>
+          </select>
         </div>
         {error && <p className="text-red-500">{error}</p>}
         <button

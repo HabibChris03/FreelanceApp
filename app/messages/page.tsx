@@ -14,11 +14,17 @@ interface Message {
   content: string;
 }
 
+interface User {
+  id: string;
+  email: string;
+}
+
 export default function MessagesPage() {
   const { data: session } = useSession();
   const [message, setMessage] = useState('');
   const [messages, setMessages] = useState<Message[]>([]);
   const [recipient, setRecipient] = useState('');
+  const [users, setUsers] = useState<User[]>([]);
 
   useEffect(() => {
     if (session) {
@@ -26,11 +32,26 @@ export default function MessagesPage() {
 
       socket.on('connect', () => {
         console.log('Connected to socket server');
+        socket.emit('join', session.user.id);
       });
 
       socket.on('message', (newMessage: Message) => {
         setMessages((prevMessages) => [...prevMessages, newMessage]);
       });
+
+      async function fetchUsers() {
+        try {
+          const res = await fetch('/api/users');
+          if (res.ok) {
+            const data = await res.json();
+            setUsers(data);
+          }
+        } catch (error) {
+          console.error('Failed to fetch users:', error);
+        }
+      }
+
+      fetchUsers();
 
       return () => {
         socket.disconnect();
@@ -71,7 +92,20 @@ export default function MessagesPage() {
       <h1 className="text-3xl font-bold mb-4">Messages</h1>
       <div className="flex">
         <div className="w-1/3 border-r pr-4">
-          {/* User list will go here */}
+          <h2 className="text-xl font-bold mb-4">Users</h2>
+          <ul>
+            {users.map((user) => (
+              <li
+                key={user.id}
+                className={`cursor-pointer p-2 rounded-lg ${
+                  recipient === user.id ? 'bg-blue-500 text-white' : ''
+                }`}
+                onClick={() => setRecipient(user.id)}
+              >
+                {user.email}
+              </li>
+            ))}
+          </ul>
         </div>
         <div className="w-2/3 pl-4">
           <div className="border rounded-lg p-4 h-96 overflow-y-scroll">

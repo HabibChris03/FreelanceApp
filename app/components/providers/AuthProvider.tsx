@@ -21,7 +21,7 @@ interface AuthContextType {
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined)
 
-const publicPages = ['/', '/auth/signin', '/auth/signup']
+const publicPages = ['/', '/auth/signin', '/auth/signup', '/jobs', /^\/jobs\/.+/]
 
 export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [user, setUser] = useState<User | null>(null)
@@ -36,9 +36,16 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         const response = await fetch('/api/auth/session')
         const session = await response.json()
         
+        const isPublic = publicPages.some(page => {
+          if (typeof page === 'string') {
+            return page === pathname;
+          }
+          return page.test(pathname);
+        });
+
         if (session?.user) {
           setUser(session.user)
-        } else if (!publicPages.includes(pathname)) {
+        } else if (!isPublic) {
           router.push('/auth/signin')
         }
       } catch (error) {

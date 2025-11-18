@@ -1,10 +1,8 @@
 
-import { PrismaClient } from '../../../lib/generated/prisma';
+import { prisma } from '../../../lib/prisma';
 import { NextResponse } from 'next/server';
 import { getServerSession } from 'next-auth';
-import { authOptions } from '../../auth/signin/route';
-
-const prisma = new PrismaClient();
+import { authOptions } from '../../api/auth/[...nextauth]/route';
 
 export async function GET(req: Request) {
   const session = await getServerSession(authOptions);
@@ -44,11 +42,11 @@ export async function POST(req: Request) {
   }
 
   try {
-    const { senderId, receiverId, content } = await req.json();
+    const { receiverId, content } = await req.json();
 
     const message = await prisma.message.create({
       data: {
-        senderId,
+        senderId: session.user.id,
         receiverId,
         content,
       },
